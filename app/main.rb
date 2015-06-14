@@ -3,9 +3,11 @@ require 'net/http'
 require 'uri'
 require 'yaml'
 require 'pry'
+require 'json'
 
 # Listen on all interfaces in the development environment
 set :bind, '0.0.0.0'
+enable :sessions
 
 get '/' do
   "Just Do It"
@@ -22,15 +24,29 @@ post '/loginvalidate' do
 	
   uri = URI.parse(path)
 	req = Net::HTTP::Get.new(uri)
-	request = nil
+	response = nil
 	req.basic_auth config["config"]["user"], config["config"]["pass"]
-	res = Net::HTTP.start(uri.hostname, uri.port) {|http|
-	  request = http.request(req)
-	}
-  request.body
+	res = Net::HTTP.start(uri.hostname, uri.port) {|http|	  response = http.request(req)	}
+  binding.pry
+  
+  
+  case response
+  when  Net::HTTPSuccess then
+    data = JSON.parse(response.body)
+    session['user'] = data['user']
+  else
+    redirect '/login'
+  end  
+  
   binding.pry
   #@path = path
   #erb :loginvalidate
-	"You said '#{params[:name]}' and '#{params[:password]}' <br> '#{request.body}'"
+	"You said '#{params[:name]}' and '#{params[:password]}' <br> '#{data['user']['api_key']}'"
   
 end
+
+get '/user/:id'
+  
+
+
+end 

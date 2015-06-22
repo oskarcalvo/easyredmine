@@ -68,6 +68,26 @@ get '/user' do
 	res = Net::HTTP.start(uri.hostname, uri.port) {|http|	  response = http.request(req)	}
   binding.pry
   
-  "Hello user '#{session[:user]}' "
+  projects = nil
+  
+  case response
+  when  Net::HTTPSuccess then
+    data = JSON.parse(response.body)
+    projects = data['user']['memberships']
+  else
+    session.clear
+    redirect '/'
+  end   
+  
+  @projects = projects
+  erb  :user
+  
+  #listofprojects = {}
+  #projects.each do |project|
+  #  listofprojects [project['project']['id'], project['project']['name']] 
+  #end
+  #"Hello user <pre>'#{listofprojects}' </pre> "
+  
+  
 
 end 

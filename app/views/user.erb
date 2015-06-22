@@ -1,0 +1,5 @@
+<ul>
+  <% for @project in @projects  %>
+    <li><a href="/project/<%= @project['project']['id'] %>"> <%= @project['project']['name'] %></a> </li>
+  <% end %>
+</ul>

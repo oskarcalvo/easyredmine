@@ -6,8 +6,17 @@ require 'pry'
 require 'json'
 
 # Listen on all interfaces in the development environment
+
+configure do 
 set :bind, '0.0.0.0'
 enable :sessions
+
+end
+
+before do
+	@config = YAML.load_file("conf/config.yaml")
+end
+
 
 get '/' do
   "Just Do It"
@@ -19,13 +28,13 @@ get '/login' do
 end
 
 post '/loginvalidate' do
-	config = YAML.load_file("conf/config.yaml")
-  path = config["config"]["url"] + config["config"]["userobject"]
+
+  path = @config["config"]["url"] + @config["config"]["userobject"]
 	
   uri = URI.parse(path)
 	req = Net::HTTP::Get.new(uri)
 	response = nil
-	req.basic_auth config["config"]["user"], config["config"]["pass"]
+	req.basic_auth @config["config"]["user"], @config["config"]["pass"]
 	res = Net::HTTP.start(uri.hostname, uri.port) {|http|	  response = http.request(req)	}
   binding.pry
   
@@ -33,7 +42,8 @@ post '/loginvalidate' do
   case response
   when  Net::HTTPSuccess then
     data = JSON.parse(response.body)
-    session['user'] = data['user']
+    session[:user] = data['user']
+    redirect '/user'
   else
     redirect '/login'
   end  
@@ -41,12 +51,23 @@ post '/loginvalidate' do
   binding.pry
   #@path = path
   #erb :loginvalidate
-	"You said '#{params[:name]}' and '#{params[:password]}' <br> '#{data['user']['api_key']}'"
+	"You said '#{params[:name]}' and '#{params[:password]}' <br> '#{session[:user]}'"
   
 end
 
-get '/user/:id'
-  
+get '/user' do
 
+  #comprobar que el id de sessión es el mismo del id de la url
+  
+  path = @config["config"]["url"] + @config["config"]["userprojects"]
+	
+  uri = URI.parse(path)
+	req = Net::HTTP::Get.new(uri)
+	response = nil
+	req.basic_auth @config["config"]["user"], @config["config"]["pass"]
+	res = Net::HTTP.start(uri.hostname, uri.port) {|http|	  response = http.request(req)	}
+  binding.pry
+  
+  "Hello user '#{session[:user]}' "
 
 end 

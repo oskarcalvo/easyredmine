@@ -1,4 +1,4 @@
-def RedmineIssues
+class RedmineIssues
 
   def getissues (path)
 

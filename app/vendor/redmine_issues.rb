@@ -7,7 +7,16 @@ class RedmineIssues
     response = nil
     res = Net::HTTP.start(uri.hostname, uri.port) {|http|	  response = http.request(req)	}
     binding.pry
-    return response  
+    
+    
+    case response
+    when  Net::HTTPSuccess then
+      data = JSON.parse(response.body)
+      return data
+    else
+      redirect '/'
+    end   
+      
 
   end
 

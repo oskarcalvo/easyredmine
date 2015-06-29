@@ -1,0 +1,10 @@
+<ul>
+  <% for @issue in @issues  %>
+    <li>
+   <%= @issue['id'] %><br>
+   <%= @issue['subject'] %><br>
+   <%= @issue['status']['name'] %><br>
+
+    </li>
+  <% end %>
+</ul>

@@ -4,14 +4,29 @@ require 'uri'
 require 'yaml'
 require 'pry'
 require 'json'
-require_relative 'vendor/redmine_user.rb'
+require 'sinatra/assetpack'
 
+require_relative 'vendor/redmine_user.rb'
+require_relative 'vendor/redmine_issues.rb'
+#http://recipes.sinatrarb.com/p/asset_management/sinatra_assetpack
+#http://blog.sourcing.io/structuring-sinatra
 
 # Listen on all interfaces in the development environment
 
 configure do 
 set :bind, '0.0.0.0'
 enable :sessions
+
+  register Sinatra::AssetPack
+  assets do
+    serve '/js', :from => 'asset/js'
+    js :application, ['/js/*.js']
+    
+    serve '/css', :from => 'asset/css'
+    css :application, ['/css/*.css']
+    
+  end
+
 
 end
 
@@ -30,17 +45,7 @@ get '/login' do
 end
 
 post '/loginvalidate' do
-
-
-  #path = @config["config"]["url"] + @config["config"]["userobject"]
-	
-  #uri = URI.parse(path)
-	#req = Net::HTTP::Get.new(uri)
-	#response = nil
-	#req.basic_auth @config["config"]["user"], @config["config"]["pass"]
-	#res = Net::HTTP.start(uri.hostname, uri.port) {|http|	  response = http.request(req)	}
-  #binding.pry
-  
+ 
   response = RedmineUser.new.getuser(params[:name],params[:password])
   
   case response
@@ -50,19 +55,14 @@ post '/loginvalidate' do
     redirect '/user'
   else
     redirect '/login'
-  end  
-  
+  end    
   binding.pry
-  #@path = path
-  #erb :loginvalidate
-	#"You said '#{params[:name]}' and '#{params[:password]}' <br> '#{session[:user]}'"
+
   
 end
 
 get '/user' do
 
-  #comprobar que el id de sessión es el mismo del id de la url
-  
   response = RedmineUser.new.getprojects(session[:user]['api_key'])
   
   projects = nil
@@ -78,19 +78,17 @@ get '/user' do
   
   @projects = projects
   erb  :user
-  
-  #listofprojects = {}
-  #projects.each do |project|
-  #  listofprojects [project['project']['id'], project['project']['name']] 
-  #end
-  #"Hello user <pre>'#{listofprojects}' </pre> "
 
 end 
 
 get '/project/:id' do
 
+  path = @config['config']['url'] + 'issues.json?project_id=' + params[:id] + '&key=' + session[:user]['api_key']
 
-  "Hello #{params['id']}!"
+  response = RedmineIssues.new.getissues (path)
+  #@issues = response['issues']
+  #erb :issues
+  "Hello '#{response}'"
 
   
 end

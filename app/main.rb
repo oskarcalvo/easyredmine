@@ -47,7 +47,8 @@ end
 post '/loginvalidate' do
  
   response = RedmineUser.new.getuser(params[:name],params[:password])
-  
+  session[:loginname] = params[:name]
+  session[:loginpass] = params[:password]
   case response
   when  Net::HTTPSuccess then
     data = JSON.parse(response.body)
@@ -84,11 +85,14 @@ end
 get '/project/:id' do
 
   path = @config['config']['url'] + 'issues.json?project_id=' + params[:id] + '&key=' + session[:user]['api_key']
-
-  response = RedmineIssues.new.getissues (path)
+  response = RedmineIssues.new.getissues path
   @issues = response['issues']
-  erb :issues
-  #"Hello '#{response}'"
+  
+  pathmembers = @config['config']['url'] + 'projects/' + params[:id] + '/memberships.json'
+  responsemembers = RedmineIssues.new.getprojectusers pathmembers,session
+  @members = responsemembers
+  #erb :issues
+  "Hello '#{responsemembers}' <br> <br>  "
 
   
 end

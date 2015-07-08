@@ -86,9 +86,9 @@ get '/project/:id' do
   path = @config['config']['url'] + 'issues.json?project_id=' + params[:id] + '&key=' + session[:user]['api_key']
 
   response = RedmineIssues.new.getissues (path)
-  #@issues = response['issues']
-  #erb :issues
-  "Hello '#{response}'"
+  @issues = response['issues']
+  erb :issues
+  #"Hello '#{response}'"
 
   
 end

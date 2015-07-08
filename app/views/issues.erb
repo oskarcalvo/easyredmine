@@ -3,8 +3,14 @@
     <li>
    <%= @issue['id'] %><br>
    <%= @issue['subject'] %><br>
-   <%= @issue['status']['name'] %><br>
-
+   <%= @issue['description'] %><br>
+   <%= @issue['status']['name'] %> <br>
+   <%= @issue['tracker']['name'] %> <%= @issue['tracker']['id'] %><br>
+   <%= @issue['status']['name'] %> <%= @issue['status']['id'] %> <br>
+   <%= @issue['priority']['name'] %> <%= @issue['priority']['id'] %> <br>
+   <%= @issue['assigned_to']['name']%> <%= @issue['assigned_to']['id'] %><br>
+   <%= @issue['start_date'] %><br>
+   <%= @issue['updated_on'] %><br>
     </li>
   <% end %>
 </ul>

@@ -16,7 +16,17 @@ class RedmineUser
     req.basic_auth user, pass
     res = Net::HTTP.start(uri.hostname, uri.port) {|http|	  response = http.request(req)	}
     binding.pry
-    return response
+    
+    data = nil
+    
+    case response
+      when  Net::HTTPSuccess then
+        data = JSON.parse(response.body)
+        return data
+      else
+      return nil
+    end    
+    
   end
 
   def getprojects (apikey)
@@ -27,7 +37,20 @@ class RedmineUser
     response = nil
     res = Net::HTTP.start(uri.hostname, uri.port) {|http|	  response = http.request(req)	}
     binding.pry
-    return response
+    
+    projects = nil
+  
+    case response
+    when  Net::HTTPSuccess then
+      data = JSON.parse(response.body)
+      projects = data['user']['memberships']
+      return projects
+    else
+      return nil
+    end  
+    
+    
+    
   end
 
 end

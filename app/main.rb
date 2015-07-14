@@ -44,38 +44,36 @@ get '/login' do
   
 end
 
-post '/loginvalidate' do
- 
+post '/loginvalidate' do 
   response = RedmineUser.new.getuser(params[:name],params[:password])
-  session[:loginname] = params[:name]
-  session[:loginpass] = params[:password]
-  case response
-  when  Net::HTTPSuccess then
-    data = JSON.parse(response.body)
+  #Si response no devuelve el objeto del usuario de redmine volvemos a la página de login
+  
+  if !response.nil?
+    #guardamos los datos de user/pass y objeto de usuario de redmine en la sesión de sinatra
+    session[:loginname] = params[:name]
+    session[:loginpass] = params[:password]
     session[:user] = data['user']
     redirect '/user'
-  else
+  else 
     redirect '/login'
-  end    
+  end
   binding.pry
 
   
 end
 
 get '/user' do
-
+  #validamos si el usuario se ha autentificado correctamente.
+  if !session.nil?
+    rediret '/login'
+  end
+  
   response = RedmineUser.new.getprojects(session[:user]['api_key'])
   
-  projects = nil
-  
-  case response
-  when  Net::HTTPSuccess then
-    data = JSON.parse(response.body)
-    projects = data['user']['memberships']
+  if !response.nil?
+    @projects = response
   else
-    session.clear
-    redirect '/'
-  end   
+    redirect 'login'
   
   @projects = projects
   erb  :user
@@ -83,14 +81,25 @@ get '/user' do
 end 
 
 get '/project/:id' do
+  #validamos si el usuario se ha autentificado correctamente.
+  if !session.nil?
+    rediret '/login'
+  end
 
   path = @config['config']['url'] + 'issues.json?project_id=' + params[:id] + '&key=' + session[:user]['api_key']
   response = RedmineIssues.new.getissues path
-  @issues = response['issues']
+  
+  if !response.nil?
+    @issues = response['issues']
+  end
   
   pathmembers = @config['config']['url'] + 'projects/' + params[:id] + '/memberships.json'
   responsemembers = RedmineIssues.new.getprojectusers pathmembers,session
-  @members = responsemembers
+  
+  if !response.nil?
+    @members = responsemembers
+  end
+  
   #erb :issues
   "Hello '#{responsemembers}' <br> <br>  "
 

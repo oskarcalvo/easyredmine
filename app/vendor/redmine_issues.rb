@@ -14,7 +14,7 @@ class RedmineIssues
       data = JSON.parse(response.body)
       return data
     else
-      redirect ('/')
+      return nil
     end   
       
 
@@ -35,7 +35,7 @@ class RedmineIssues
       data = JSON.parse(response.body)
       return data
     else
-      redirect ('/')
+      return nil 
     end   
   
   end

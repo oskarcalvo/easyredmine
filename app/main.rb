@@ -52,7 +52,7 @@ post '/loginvalidate' do
     #guardamos los datos de user/pass y objeto de usuario de redmine en la sesión de sinatra
     session[:loginname] = params[:name]
     session[:loginpass] = params[:password]
-    session[:user] = data['user']
+    session[:user] = response['user']
     redirect '/user'
   else 
     redirect '/login'
@@ -64,8 +64,8 @@ end
 
 get '/user' do
   #validamos si el usuario se ha autentificado correctamente.
-  if !session.nil?
-    rediret '/login'
+  if session.nil?
+    redirect '/login'
   end
   
   response = RedmineUser.new.getprojects(session[:user]['api_key'])
@@ -73,17 +73,18 @@ get '/user' do
   if !response.nil?
     @projects = response
   else
-    redirect 'login'
+    redirect '/login'
+  end
   
-  @projects = projects
   erb  :user
 
 end 
 
 get '/project/:id' do
+    binding.pry
   #validamos si el usuario se ha autentificado correctamente.
-  if !session.nil?
-    rediret '/login'
+  if session.nil?
+    redirect '/login'
   end
 
   path = @config['config']['url'] + 'issues.json?project_id=' + params[:id] + '&key=' + session[:user]['api_key']

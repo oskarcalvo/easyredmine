@@ -15,7 +15,7 @@ class RedmineUser
     response = nil
     req.basic_auth user, pass
     res = Net::HTTP.start(uri.hostname, uri.port) {|http|	  response = http.request(req)	}
-    binding.pry
+    #binding.pry
     
     data = nil
     
@@ -36,7 +36,7 @@ class RedmineUser
     req = Net::HTTP::Get.new(uri)
     response = nil
     res = Net::HTTP.start(uri.hostname, uri.port) {|http|	  response = http.request(req)	}
-    binding.pry
+    #binding.pry
     
     projects = nil
   

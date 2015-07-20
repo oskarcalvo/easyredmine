@@ -57,7 +57,7 @@ post '/loginvalidate' do
   else 
     redirect '/login'
   end
-  binding.pry
+  ##binding.pry
 
   
 end
@@ -81,7 +81,7 @@ get '/user' do
 end 
 
 get '/project/:id' do
-    binding.pry
+    #binding.pry
   #validamos si el usuario se ha autentificado correctamente.
   if session.nil?
     redirect '/login'
@@ -97,12 +97,12 @@ get '/project/:id' do
   pathmembers = @config['config']['url'] + 'projects/' + params[:id] + '/memberships.json'
   responsemembers = RedmineIssues.new.getprojectusers pathmembers,session
   
-  if !response.nil?
+  if !responsemembers .nil?
     @members = responsemembers
   end
   
-  #erb :issues
-  "Hello '#{responsemembers}' <br> <br>  "
+  erb :issues
+  #"Hello '#{responsemembers}' <br>  <br>  "
 
   
 end

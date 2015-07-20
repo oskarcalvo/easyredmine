@@ -6,7 +6,7 @@ class RedmineIssues
     req = Net::HTTP::Get.new(uri)
     response = nil
     res = Net::HTTP.start(uri.hostname, uri.port) {|http|	  response = http.request(req)	}
-    binding.pry
+    #binding.pry
     
     
     case response
@@ -27,7 +27,7 @@ class RedmineIssues
     response = nil
     req.basic_auth session[:loginname], session[:loginpass]
     res = Net::HTTP.start(uri.hostname, uri.port) {|http|	  response = http.request(req)	}
-    binding.pry
+    #binding.pry
     
     
     case response

@@ -18,24 +18,39 @@
 <body>
   <div class="row">
     
-    <div class="small-6 large-centered columns">
+    <div class="large-centered columns">
 <table>
-<thead></thead>
+<thead>
+  <tr>
+    <th>#</th>
+    <th>Asunto</th>
+    <th>Estado</th>
+    <th>Tipo</th>
+    <th>Tracker</th>
+    <th>Prioridad</th>
+    <th>Asignado a</th>
+    <th>fechas comienzo/fin</th>
+  </tr>
+</thead>
 <tbody>
 
   <% for @issue in @issues  %>
   <tr>
-   <td><%= @issue['id'] %><br></td>
+   <td>
+    <a target="_blank" href="<%= @path %>issues/<%= @issue['id'] %>"> 
+      <%= @issue['id'] %>
+    </a>
+   </td>
    <td>
     <span  data-tooltip aria-haspopup="true" class="has-tip" title="<%= @issue['description'] %>" >
       <%= @issue['subject'] %>
     </span>
    </td>
-   <td><%= @issue['status']['name'] %> </td>
-   <td><%= @issue['tracker']['name'] %> <%= @issue['tracker']['id'] %></td>
-   <td><%= @issue['status']['name'] %> <%= @issue['status']['id'] %> </td>
-   <td><%= @issue['priority']['name'] %> <%= @issue['priority']['id'] %> </td>
-   <td><%= @issue['assigned_to']['name']%> <%= @issue['assigned_to']['id'] %></td>
+   <td><%= @issue['status']['name'] %><br><%= @issue['status']['id'] %> </td>
+   <td><%= @issue['tracker']['name'] %><br> <%= @issue['tracker']['id'] %></td>
+   <td><%= @issue['status']['name'] %> <br><%= @issue['status']['id'] %> </td>
+   <td><%= @issue['priority']['name'] %><br> <%= @issue['priority']['id'] %> </td>
+   <td><%= @issue['assigned_to']['name']%><br> <%= @issue['assigned_to']['id'] %></td>
    <td><%= @issue['start_date'] %><br><%= @issue['updated_on'] %></td>
   <tr>    
   <% end %>

@@ -101,6 +101,9 @@ get '/project/:id' do
     @members = responsemembers
   end
   
+  #Pasamos la variable con la url de redmine.
+  @path = @config['config']['url']
+  
   erb :issues
   #"Hello '#{responsemembers}' <br>  <br>  "
 

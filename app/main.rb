@@ -1,4 +1,6 @@
 require 'sinatra'
+require 'active_support'
+#require 'action_view'
 require 'net/http'
 require 'uri'
 require 'yaml'
@@ -97,15 +99,20 @@ get '/project/:id' do
   pathmembers = @config['config']['url'] + 'projects/' + params[:id] + '/memberships.json'
   responsemembers = RedmineIssues.new.getprojectusers pathmembers,session
   
+  miembros = nil
+
   if !responsemembers .nil?
-    @members = responsemembers
+  
+    members = responsemembers['memberships'].inject({}) {|sum, elem| sum[elem['user']['id']] = elem['user']['name']; sum}
+    
+    miembros = members
   end
   
   #Pasamos la variable con la url de redmine.
-  @path = @config['config']['url']
+  #@path = @config['config']['url']
   
-  erb :issues
-  #"Hello '#{responsemembers}' <br>  <br>  "
+  #erb :issues
+  "Hello '#{miembros}' <br>  <br>  "
 
   
 end

@@ -1,12 +1,15 @@
+require 'rubygems'
 require 'sinatra'
 require 'active_support'
 #require 'action_view'
+require 'sinatra_more' 
 require 'net/http'
 require 'uri'
 require 'yaml'
 require 'pry'
 require 'json'
 require 'sinatra/assetpack'
+
 
 require_relative 'vendor/redmine_user.rb'
 require_relative 'vendor/redmine_issues.rb'
@@ -101,7 +104,7 @@ get '/project/:id' do
   
   miembros = nil
 
-  if !responsemembers .nil?
+  if !responsemembers.nil?
   
     members = responsemembers['memberships'].inject({}) {|sum, elem| sum[elem['user']['id']] = elem['user']['name']; sum}
     

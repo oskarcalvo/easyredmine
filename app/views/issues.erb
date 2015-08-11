@@ -19,6 +19,10 @@
   <div class="row">
     
     <div class="large-centered columns">
+
+
+<% # raise @members.inspect %>
+
 <table>
 <thead>
   <tr>
@@ -36,22 +40,30 @@
 
   <% for @issue in @issues  %>
   <tr>
-   <td>
-    <a target="_blank" href="<%= @path %>issues/<%= @issue['id'] %>"> 
-      <%= @issue['id'] %>
-    </a>
-   </td>
-   <td>
-    <span  data-tooltip aria-haspopup="true" class="has-tip" title="<%= @issue['description'] %>" >
-      <%= @issue['subject'] %>
-    </span>
-   </td>
-   <td><%= @issue['status']['name'] %><br><%= @issue['status']['id'] %> </td>
-   <td><%= @issue['tracker']['name'] %><br> <%= @issue['tracker']['id'] %></td>
-   <td><%= @issue['status']['name'] %> <br><%= @issue['status']['id'] %> </td>
-   <td><%= @issue['priority']['name'] %><br> <%= @issue['priority']['id'] %> </td>
-   <td><%= @issue['assigned_to']['name']%><br> <%= @issue['assigned_to']['id'] %></td>
-   <td><%= @issue['start_date'] %><br><%= @issue['updated_on'] %></td>
+    <td>
+      <a target="_blank" href="<%= @path %>issues/<%= @issue['id'] %>"> 
+        <%= @issue['id'] %>
+      </a>
+    </td>
+    <td>
+      <span  data-tooltip aria-haspopup="true" class="has-tip" title="<%= @issue['description'] %>" >
+        <%= @issue['subject'] %>
+      </span>
+    </td>
+    <td><%= @issue['status']['name'] %><br><%= @issue['status']['id'] %> </td>
+    <td>
+      <%= select(@trackers, @issue['tracker']['id']) %>
+      <br><%= @issue['tracker']['name'] %><br> <%= @issue['tracker']['id'] %>
+    </td>
+
+
+
+    <td><%= @issue['status']['name'] %> <br><%= @issue['status']['id'] %> </td>
+    <td><%= select(@priorities, @issue['priority']['id']) %> </td>
+    <td><%= select(@members,@issue['assigned_to']['id']) %>
+   
+    </td>
+    <td><%= @issue['start_date'] %><br><%= @issue['updated_on'] %></td>
   <tr>    
   <% end %>
 

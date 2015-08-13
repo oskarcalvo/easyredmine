@@ -32,7 +32,7 @@ module Sinatra
         html << option_name
         html << "</option>"
       end
-      "<select name=\"#{name}\">#{html}</select>"
+      "<select class=\"#{name}\"  name=\"#{name}\">#{html}</select>"
     end
 
 

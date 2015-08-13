@@ -1,5 +1,32 @@
-<ul>
-  <% for @project in @projects  %>
-    <li><a href="/project/<%= @project['project']['id'] %>"> <%= @project['project']['name'] %></a> </li>
-  <% end %>
-</ul>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>SB Admin - Bootstrap Admin Template</title>
+    <%= js :application %>
+    <%= css :application %>
+  
+
+</head>
+<body>
+
+  <div class="row">
+    
+    <div class="large-centered columns">
+
+			<ul>
+			  <% for @project in @projects  %>
+			    <li><a href="/project/<%= @project['project']['id'] %>"> <%= @project['project']['name'] %></a> </li>
+			  <% end %>
+			</ul>
+		</div>
+	</div>
+</body>
+</html>

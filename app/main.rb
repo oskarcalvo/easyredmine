@@ -21,7 +21,7 @@ module Sinatra
   module HtmlHelpers
 
     # Basic implementation of a HTML SELECT helper
-    def select(options_list, selected_value)
+    def select(name, options_list, selected_value)
       html = ''
       options_list.each do |nv_pair|
         option_value = nv_pair[0]
@@ -32,7 +32,20 @@ module Sinatra
         html << option_name
         html << "</option>"
       end
-      "<select >#{html}</select>"
+      "<select name=\"#{name}\">#{html}</select>"
+    end
+
+
+    def cleanhash(hash)
+
+      newhash = Hash.new
+      hash.each do |nv_pair|
+        option_name = nv_pair['name']
+        option_value = nv_pair['id']
+        newhash[option_value] = option_name
+
+      end
+      newhash
     end
 
   end
@@ -46,18 +59,20 @@ end
 configure do 
 set :bind, '0.0.0.0'
 enable :sessions
-
+set :static_cache_control, [:public, max_age: 60 * 60 * 24 * 365]
   register Sinatra::AssetPack
   assets do
     serve '/js', :from => 'asset/js'
-    js :application, ['/js/*.js']
+    js :application, [
+      '/js/jquery.js',
+      '/js/foundation.min.js',
+      '/js/easyredmine.js',
+      '/js/vendor/*.js'
+    ]
     
     serve '/css', :from => 'asset/css'
     css :application, ['/css/*.css']
-    
   end
-
-
 end
 
 before do
@@ -132,21 +147,25 @@ get '/project/:id' do
 
   pathpriorities = @config['config']['url'] + 'enumerations/issue_priorities.json'
   responsepriorities = RedmineIssues.new.getissuepriorities pathpriorities, session
+
   if !responsepriorities.nil?
     @priorities = responsepriorities['issue_priorities'].inject {|sum, elem| sum[elem['id']] = elem['name']; sum}
+  
   end
 
-  pathtracker = @config['config']['url'] + 'trackers.json'
-  responsetracker = RedmineIssues.new.getissuedata pathtracker, session
-  if !responsetracker.nil?
-    @trackers = responsetracker['trackers'].inject {|sum, elem| sum[elem['id']] = elem['name']; sum}
+  pathtracker = @config['config']['url']  + 'projects/' + params[:id] + '.json?include=trackers'
+  responsetrackers = RedmineIssues.new.getissuedata pathtracker, session
+
+  if !responsetrackers.nil?
+    @trackers = cleanhash ( responsetrackers['project']['trackers'])
+  #   @trackers = responsetrackers['project']['trackers'].inject {|sum, elem| sum[elem['id']] = elem['name']; sum}
   end
 
   #Pasamos la variable con la url de redmine.
   @path = @config['config']['url']
 
   erb :issues
-  #{}"Hello '#{@members.inspect}' <br>  <br>  "
+  #"Hello '#{@trackers}' "
 
   
 end

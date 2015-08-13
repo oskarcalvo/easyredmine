@@ -67,21 +67,12 @@
         <%= @issue['subject'] %>
       </span>
     </td>
-
-    <td>
-      <%= select('tracker', @trackers, @issue['tracker']['id']) %>
-        
-    </td>
-
-
-
+    <td> <%= select('tracker', @trackers, @issue['tracker']['id']) %> </td>
     <td><%= @issue['status']['name'] %> <br><%= @issue['status']['id'] %> </td>
-    <td><%= select('prioriti', @priorities, @issue['priority']['id']) %> </td>
-    <td><%= select('member', @members,@issue['assigned_to']['id']) %>
-   
-    </td>
+    <td><%= select('prioriti_' +  @issue['id'].to_s , @priorities, @issue['priority']['id']) %> </td>
+    <td><%= select('member', @members,@issue['assigned_to']['id']) %> </td>
     <td><%= @issue['start_date'] %><br><%= @issue['updated_on'] %></td>
-    <td><i class="saveissue step fi-save size-20"></i></td>
+    <td><i class="saveissue step fi-save size-20" data-id="<%= @issue['id'] %>"></i></td>
   <tr>    
   <% end %>
 

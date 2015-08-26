@@ -6,7 +6,7 @@ require 'yaml'
 require 'pry'
 require 'json'
 require 'sinatra/assetpack'
-
+#require ' redcarpet'
 
 require_relative 'vendor/redmine_user.rb'
 require_relative 'vendor/redmine_issues.rb'
@@ -37,13 +37,11 @@ module Sinatra
 
 
     def cleanhash(hash)
-
       newhash = Hash.new
       hash.each do |nv_pair|
         option_name = nv_pair['name']
         option_value = nv_pair['id']
         newhash[option_value] = option_name
-
       end
       newhash
     end
@@ -148,8 +146,10 @@ get '/project/:id' do
   pathpriorities = @config['config']['url'] + 'enumerations/issue_priorities.json'
   responsepriorities = RedmineIssues.new.getissuepriorities pathpriorities, session
 
+
+
   if !responsepriorities.nil?
-    @priorities = responsepriorities['issue_priorities'].inject {|sum, elem| sum[elem['id']] = elem['name']; sum}
+    @priorities =  cleanhash ( responsepriorities['issue_priorities'])
   
   end
 
@@ -168,4 +168,18 @@ get '/project/:id' do
   #"Hello '#{@trackers}' "
 
   
+end
+
+get '/issues/:id/:include' do
+  if session.nil?
+    redirect '/login'
+  end
+  # http://url/issues/:id.json?include=journals
+  # TODO trocear la construcción de la url or si :include viene vacio y comprobar que se puede tener una variable vacia, 
+  # ¿Usar argumento en vez de parámetro?
+  path = @config['config']['url'] + 'issues/' + params[:id] + '.json?include=' + params[:include]
+  issuedata = RedmineIssues.new.getissuedata path, session
+
+  "hello '#{issuedata['issue']['journals']}' "
+
 end

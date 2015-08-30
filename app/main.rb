@@ -6,10 +6,11 @@ require 'yaml'
 require 'pry'
 require 'json'
 require 'sinatra/assetpack'
-#require ' redcarpet'
+require 'redcarpet'
 
 require_relative 'vendor/redmine_user.rb'
 require_relative 'vendor/redmine_issues.rb'
+require_relative 'vendor/redmine_journals.rb'
 #require_relative 'helpers/redminehtmlhelper.rb'
 #http://recipes.sinatrarb.com/p/asset_management/sinatra_assetpack
 #http://blog.sourcing.io/structuring-sinatra
@@ -180,6 +181,21 @@ get '/issues/:id/:include' do
   path = @config['config']['url'] + 'issues/' + params[:id] + '.json?include=' + params[:include]
   issuedata = RedmineIssues.new.getissuedata path, session
 
-  "hello '#{issuedata['issue']['journals']}' "
+  journals = issuedata['issue']['journals']
+
+  @newjournal = Hash.new
+
+  journals.each do | journal|
+
+    # if journal['notes']
+    #   puts journal['notes'].inspect
+    # end
+
+    newjournal = RedmineJournals.new journal
+
+  end
+
+
+  "hello '#{journals}'  "
 
 end

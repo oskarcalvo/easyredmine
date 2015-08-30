@@ -34,23 +34,83 @@
   </div>
 </div>
 
-<div class="row" style="margin-top: 25px;">    
-    <div class="small-14 columns">
+<div class="row" style="margin-top: 150px;">    
 
 
+</div>
 <% # raise @members.inspect %>
+  
+  <div class="row">  
+    <div class=" columns" style="width:25%">
+      Asunto
+    </div>
+    <div class=" columns" style="width:12%">
+      Tipo
+    </div>
+    <div class=" columns" style="width:12%">
+      Estado
+    </div>
+    <div class=" columns" style="width:12%">
+      Prioridad
+    </div>
+    <div class=" columns" style="width:15%">
+      Asignado a
+    </div>
+    <div class=" columns" style="width:12%">
+      Fechas
+    </div>
+    <div class=" columns" style="width:5%">
+    Acción
+    </div>   
+  </div>
 
+   
+  <% for @issue in @issues  %>
+  <div class="row" style="margin-top: 20px;"> 
+    <div class=" columns" style="width:25%">
+      <a target="_blank" href="<%= @path %>issues/<%= @issue['id'] %>"> 
+        <%= @issue['id'] %>
+      </a>
+      <span  data-tooltip aria-haspopup="true" class="has-tip" title="<%= @issue['description'] %>" >
+        <%= @issue['subject'] %>
+      </span>
+    </div>
+    <div class=" columns" style="width:12%"> 
+      <%= select('tracker', @trackers, @issue['tracker']['id']) %> 
+    </div>
+    <div class=" columns" style="width:12%">
+      <%= @issue['status']['name'] %> <br><%= @issue['status']['id'] %> 
+    </div>
+    <div class=" columns" style="width:12%">
+      <%= select('prioriti_' +  @issue['id'].to_s , @priorities, @issue['priority']['id']) %> 
+    </div>
+    <div class=" columns" style="width:15%">
+      <%= select('member', @members,@issue['assigned_to']['id']) %> 
+    </div>
+    <div class=" columns" style="width:12%">
+      <%= @issue['start_date'] %><br><%= @issue['updated_on'] %>
+    </div>
+    <div class=" columns" style="width:5%">
+      <i class="saveissue step fi-save size-20" data-id="<%= @issue['id'] %>"></i>
+    </div> 
+  </div>
+  <% end %>
+
+
+
+<!--
+
+    <div class="small-14 columns"> 
 <table>
 <thead>
   <tr>
-    <th>#</th>
     <th>Asunto</th>
     <th>Tipo</th>
     <th>Estado</th>
     <th>Prioridad</th>
     <th>Asignado a</th>
     <th>fechas comienzo/fin</th>
-    <th>Action</th>
+    <th>Acción</th>
   </tr>
 </thead>
 <tbody>
@@ -61,8 +121,6 @@
       <a target="_blank" href="<%= @path %>issues/<%= @issue['id'] %>"> 
         <%= @issue['id'] %>
       </a>
-    </td>
-    <td>
       <span  data-tooltip aria-haspopup="true" class="has-tip" title="<%= @issue['description'] %>" >
         <%= @issue['subject'] %>
       </span>
@@ -79,6 +137,8 @@
 </tbody>
 </table>
 </div>
+
 </div>
+-->
 </body>
 </html>

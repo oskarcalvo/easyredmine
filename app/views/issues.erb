@@ -110,11 +110,27 @@
       <div class="" style="width:12%">
         <label>Tipo:</label>
         <span>
-          <%= select('tracker', @trackers, nil) %> 
+          <%= select('tracker', @trackers, @issue['tracker']['id'] ) %> 
         </span>
       </div>
-
-
+      <div class="" style="width:12%">
+        <label>Estado:</label>
+        <span>
+          <%= @issue['status']['name'] %> <br><%= @issue['status']['id'] %>
+        </span>
+      </div>
+      <div class="" style="width:12%">
+        <label>Prioridad:</label>
+        <span>
+          <%= select('prioriti_' +  @issue['id'].to_s , @priorities, @issue['priority']['id']) %> 
+        </span>
+      </div>
+      <div class="" style="width:12%">
+        <label>Asignado a:</label>
+        <span>
+          <%= select('member', @members,@issue['assigned_to']['id']) %> 
+        </span>
+      </div>
 
     </form>
     

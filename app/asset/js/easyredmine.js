@@ -6,7 +6,7 @@ $(document).ready(function () {
   	//var issue = $(this).attr("#data-issue");
   	var issue = $(this).attr('data-id');
 
-  	console.log( $(".prioriti_"+ issue).val());
+  	console.log( issue );
 
 
   	//alert("Handler for .click() called." + issue);

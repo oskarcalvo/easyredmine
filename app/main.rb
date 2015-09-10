@@ -166,7 +166,7 @@ get '/project/:id' do
   @path = @config['config']['url']
 
   erb :issues
-  #"Hello '#{@trackers}' "
+  #{}"Hello '#{@issues}' "
 
   
 end

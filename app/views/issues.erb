@@ -66,37 +66,61 @@
 
    
   <% for @issue in @issues  %>
-  <div class="row" style="margin-top: 20px;"> 
-    <div class=" columns" style="width:25%">
-      <a target="_blank" href="<%= @path %>issues/<%= @issue['id'] %>"> 
-        <%= @issue['id'] %>
-      </a>
-      <span  data-tooltip aria-haspopup="true" class="has-tip" title="<%= @issue['description'] %>" >
-        <%= @issue['subject'] %>
-      </span>
+    <div class="row" data-issue-id="<%= @issue['id'] %>" style="margin-top: 20px;"> 
+      <div class=" columns" style="width:25%">
+        <a target="_blank" href="<%= @path %>issues/<%= @issue['id'] %>"> 
+          <%= @issue['id'] %>
+        </a>
+        <span  data-tooltip aria-haspopup="true" class="has-tip" title="<%= @issue['description'] %>" >
+          <%= @issue['subject'] %>
+        </span>
+      </div>
+      <div class=" columns" style="width:12%"> 
+        <span data-tracker-id="<%= @issue['tracker']['id'] %>"> 
+          <%= @issue['tracker']['name'] %>
+        </span>
+      </div>
+      <div class=" columns" style="width:12%">
+        <span data-status-id="<%= @issue['status']['id'] %>">
+          <%= @issue['status']['name'] %>  
+        </span>
+      </div>
+      <div class=" columns" style="width:12%">
+        <span data-priority-id="<%= @issue['priority']['id'] %>">
+          <%= @issue['priority']['name'] %>
+        </span>
+      </div>
+      <div class=" columns" style="width:15%">
+        <span data-assigned_to_id="<%= @issue['assigned_to']['id'] %>">
+          <%= @issue['assigned_to']['name'] %>
+        </span>
+      </div>
+      <div class=" columns" style="width:12%">
+        <%= @issue['start_date'] %><br><%= @issue['updated_on'] %>
+      </div>
+      <div class=" columns" style="width:5%">
+        <i class="saveissue step fi-pencil size-20" data-id="<%= @issue['id'] %>"></i>
+        <i class="saveissue step fi-plus size-20" data-id="<%= @issue['id'] %>"></i>
+      </div> 
     </div>
-    <div class=" columns" style="width:12%"> 
-      <%= select('tracker', @trackers, @issue['tracker']['id']) %> 
-    </div>
-    <div class=" columns" style="width:12%">
-      <%= @issue['status']['name'] %> <br><%= @issue['status']['id'] %> 
-    </div>
-    <div class=" columns" style="width:12%">
-      <%= select('prioriti_' +  @issue['id'].to_s , @priorities, @issue['priority']['id']) %> 
-    </div>
-    <div class=" columns" style="width:15%">
-      <%= select('member', @members,@issue['assigned_to']['id']) %> 
-    </div>
-    <div class=" columns" style="width:12%">
-      <%= @issue['start_date'] %><br><%= @issue['updated_on'] %>
-    </div>
-    <div class=" columns" style="width:5%">
-      <i class="saveissue step fi-save size-20" data-id="<%= @issue['id'] %>"></i>
-    </div> 
-  </div>
   <% end %>
 
+  <div class="hidden row">
+    <form action="/wadus">
+      <div class="" style="width:12%">
+        <label>Tipo:</label>
+        <span>
+          <%= select('tracker', @trackers, nil) %> 
+        </span>
+      </div>
 
+
+
+    </form>
+    
+
+
+  </div>
 
 <!--
 

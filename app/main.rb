@@ -56,8 +56,11 @@ end
 
 
 configure do 
+
 set :bind, '0.0.0.0'
+
 enable :sessions
+
 set :static_cache_control, [:public, max_age: 60 * 60 * 24 * 365]
   register Sinatra::AssetPack
   assets do
@@ -78,6 +81,13 @@ before do
 	@config = YAML.load_file("conf/config.yaml")
 end
 
+def require_logged_in
+  redirect('login') unless is_authenticated?
+end
+
+def is_authenticated?
+  return !!session[:user_id]
+end
 
 get '/' do
   "Just Do It"
@@ -108,9 +118,8 @@ end
 
 get '/user' do
   #validamos si el usuario se ha autentificado correctamente.
-  if session.nil?
-    redirect '/login'
-  end
+  require_logged_in
+
   
   response = RedmineUser.new.getprojects(session[:user]['api_key'])
   
@@ -125,11 +134,10 @@ get '/user' do
 end 
 
 get '/project/:id' do
-    #binding.pry
+  #binding.pry
   #validamos si el usuario se ha autentificado correctamente.
-  if session.nil?
-    redirect '/login'
-  end
+  require_logged_in
+
 
   path = @config['config']['url'] + 'issues.json?project_id=' + params[:id] + '&key=' + session[:user]['api_key']
   response = RedmineIssues.new.getissues path
@@ -172,9 +180,7 @@ get '/project/:id' do
 end
 
 get '/issues/:id/:include' do
-  if session.nil?
-    redirect '/login'
-  end
+  require_logged_in
   # http://url/issues/:id.json?include=journals
   # TODO trocear la construcción de la url or si :include viene vacio y comprobar que se puede tener una variable vacia, 
   # ¿Usar argumento en vez de parámetro?

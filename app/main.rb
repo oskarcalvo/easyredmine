@@ -57,11 +57,11 @@ end
 
 configure do 
 
-set :bind, '0.0.0.0'
+  set :bind, '0.0.0.0'
 
-enable :sessions
+  enable :sessions
 
-set :static_cache_control, [:public, max_age: 60 * 60 * 24 * 365]
+  set :static_cache_control, [:public, max_age: 60 * 60 * 24 * 365]
   register Sinatra::AssetPack
   assets do
     serve '/js', :from => 'asset/js'
